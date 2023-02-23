@@ -19,6 +19,8 @@ namespace MobilePoint
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<MobilePointDbContext>();
             builder.Services.AddControllersWithViews();
+            builder.Services.AddControllers(
+    options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 
             var app = builder.Build();
 

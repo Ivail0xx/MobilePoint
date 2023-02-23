@@ -7,6 +7,6 @@
        public string Model { get; set; }
       public string Specification { get; set; }
         public DateTime RegisterOn { get; set; }
-        public ICollection<BrandModel> BrandModels { get;set; }
+        public ICollection<Phone> Phones { get;set; }
     }
 }
