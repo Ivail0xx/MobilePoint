@@ -23,6 +23,9 @@ namespace MobilePoint
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             builder.Services.AddControllersWithViews();
+            builder.Services.AddControllers(
+                options =>
+                options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 
             var app = builder.Build();
 
