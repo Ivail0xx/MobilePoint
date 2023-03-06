@@ -8,10 +8,10 @@ using MobilePoint.Data;
 
 #nullable disable
 
-namespace MobilePoint.Data.Migrations
+namespace MobilePoint.Migrations
 {
     [DbContext(typeof(MobilePointDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    partial class MobilePointDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

@@ -47,7 +47,7 @@ namespace MobilePoint.Controllers
         // GET: Phones/Create
         public IActionResult Create()
         {
-            ViewData["BrandModelId"] = new SelectList(_context.BrandModels, "Id", "Id");
+            ViewData["BrandModelId"] = new SelectList(_context.BrandModels, "Id", "Brand"+"Model");
             return View();
         }
 

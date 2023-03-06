@@ -9,17 +9,17 @@ using MobilePoint.Data;
 
 #nullable disable
 
-namespace MobilePoint.Data.Migrations
+namespace MobilePoint.Migrations
 {
     [DbContext(typeof(MobilePointDbContext))]
-    [Migration("20230213063119_MobilePoint")]
+    [Migration("20230227064633_MobilePoint")]
     partial class MobilePoint
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.11")
+                .HasAnnotation("ProductVersion", "6.0.14")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -173,9 +173,6 @@ namespace MobilePoint.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("BrandModelId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Model")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -188,8 +185,6 @@ namespace MobilePoint.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BrandModelId");
 
                     b.ToTable("BrandModels");
                 });
@@ -240,7 +235,7 @@ namespace MobilePoint.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(10,2)");
 
                     b.Property<DateTime>("RegisterOn")
                         .HasColumnType("datetime2");
@@ -379,13 +374,6 @@ namespace MobilePoint.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MobilePoint.Data.BrandModel", b =>
-                {
-                    b.HasOne("MobilePoint.Data.BrandModel", null)
-                        .WithMany("BrandModels")
-                        .HasForeignKey("BrandModelId");
-                });
-
             modelBuilder.Entity("MobilePoint.Data.Order", b =>
                 {
                     b.HasOne("MobilePoint.Data.Phone", "Phones")
@@ -408,7 +396,7 @@ namespace MobilePoint.Data.Migrations
             modelBuilder.Entity("MobilePoint.Data.Phone", b =>
                 {
                     b.HasOne("MobilePoint.Data.BrandModel", "BrandModels")
-                        .WithMany()
+                        .WithMany("Phones")
                         .HasForeignKey("BrandModelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -418,7 +406,7 @@ namespace MobilePoint.Data.Migrations
 
             modelBuilder.Entity("MobilePoint.Data.BrandModel", b =>
                 {
-                    b.Navigation("BrandModels");
+                    b.Navigation("Phones");
                 });
 
             modelBuilder.Entity("MobilePoint.Data.Phone", b =>
