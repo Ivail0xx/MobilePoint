@@ -47,7 +47,7 @@ namespace MobilePoint.Controllers
         // GET: Phones/Create
         public IActionResult Create()
         {
-            ViewData["BrandModelId"] = new SelectList(_context.BrandModels, "Id", "Brand");
+            ViewData["BrandModelId"] = new SelectList(_context.BrandModels, "Id", "Id");
             return View();
         }
 
@@ -56,7 +56,7 @@ namespace MobilePoint.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,BrandModelId,Color,Price,RegisterOn")] Phone phone)
+        public async Task<IActionResult> Create([Bind("Id,BrandModelId,Color,ImageURL,Price,RegisterOn")] Phone phone)
         {
             if (ModelState.IsValid)
             {
@@ -90,7 +90,7 @@ namespace MobilePoint.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,BrandModelId,Color,Price,RegisterOn")] Phone phone)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,BrandModelId,Color,ImageURL,Price,RegisterOn")] Phone phone)
         {
             if (id != phone.Id)
             {

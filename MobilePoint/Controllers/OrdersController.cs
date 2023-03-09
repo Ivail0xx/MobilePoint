@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +11,7 @@ using MobilePoint.Data;
 
 namespace MobilePoint.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class OrdersController : Controller
     {
         private readonly MobilePointDbContext _context;
@@ -24,7 +27,7 @@ namespace MobilePoint.Controllers
             var mobilePointDbContext = _context.Orders.Include(o => o.Phones).Include(o => o.Users);
             return View(await mobilePointDbContext.ToListAsync());
         }
-
+        
         // GET: Orders/Details/5
         public async Task<IActionResult> Details(int? id)
         {
