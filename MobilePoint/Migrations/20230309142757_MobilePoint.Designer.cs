@@ -12,7 +12,7 @@ using MobilePoint.Data;
 namespace MobilePoint.Migrations
 {
     [DbContext(typeof(MobilePointDbContext))]
-    [Migration("20230227064633_MobilePoint")]
+    [Migration("20230309142757_MobilePoint")]
     partial class MobilePoint
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -231,6 +231,10 @@ namespace MobilePoint.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageURL")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

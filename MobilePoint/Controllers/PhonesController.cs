@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -43,11 +45,16 @@ namespace MobilePoint.Controllers
 
             return View(phone);
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Phones/Create
         public IActionResult Create()
-        {
-            ViewData["BrandModelId"] = new SelectList(_context.BrandModels, "Id", "Id");
+        {          
+            ViewData["BrandModelId"] = _context.BrandModels.Select(x =>
+            new SelectListItem
+            {
+                Text = x.Brand + " " + x.Model,
+                Value = x.Id.ToString()
+            });
             return View();
         }
 
@@ -56,19 +63,26 @@ namespace MobilePoint.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,BrandModelId,Color,ImageURL,Price,RegisterOn")] Phone phone)
+        public async Task<IActionResult> Create([Bind("BrandModelId,Color,ImageURL,Price")] Phone phone)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(phone);
+                phone.RegisterOn = DateTime.Now;
+                _context.Phones.Add(phone);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BrandModelId"] = new SelectList(_context.BrandModels, "Id", "Id", phone.BrandModelId);
+            ViewData["BrandModelId"] = _context.BrandModels.Select(x =>
+            new SelectListItem
+            {
+                Text = x.Brand + " " + x.Model,
+                Value = x.Id.ToString()
+            });
             return View(phone);
         }
 
         // GET: Phones/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Phones == null)
@@ -81,7 +95,12 @@ namespace MobilePoint.Controllers
             {
                 return NotFound();
             }
-            ViewData["BrandModelId"] = new SelectList(_context.BrandModels, "Id", "Id", phone.BrandModelId);
+            ViewData["BrandModelId"] = _context.BrandModels.Select(x =>
+            new SelectListItem
+            {
+                Text = x.Brand + " " + x.Model,
+                Value = x.Id.ToString()
+            });
             return View(phone);
         }
 
@@ -90,7 +109,7 @@ namespace MobilePoint.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,BrandModelId,Color,ImageURL,Price,RegisterOn")] Phone phone)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,BrandModelId,Color,ImageURL,Price")] Phone phone)
         {
             if (id != phone.Id)
             {
@@ -101,7 +120,8 @@ namespace MobilePoint.Controllers
             {
                 try
                 {
-                    _context.Update(phone);
+                    phone.RegisterOn = DateTime.Now;
+                    _context.Phones.Update(phone);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -117,11 +137,17 @@ namespace MobilePoint.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BrandModelId"] = new SelectList(_context.BrandModels, "Id", "Id", phone.BrandModelId);
+            ViewData["BrandModelId"] = _context.BrandModels.Select(x =>
+            new SelectListItem
+            {
+                Text = x.Brand + " " + x.Model,
+                Value = x.Id.ToString()
+            });
             return View(phone);
         }
 
         // GET: Phones/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Phones == null)

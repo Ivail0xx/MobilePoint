@@ -31,10 +31,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Users.Id)
+                @Html.DisplayFor(modelItem => item.Users.UserName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Phones.Id)
+                    <img src="@Html.DisplayFor(modelItem => item.Phones.ImageURL)" width="100"/>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Quantity)

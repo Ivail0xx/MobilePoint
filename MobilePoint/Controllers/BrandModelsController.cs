@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +11,7 @@ using MobilePoint.Data;
 
 namespace MobilePoint.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class BrandModelsController : Controller
     {
         private readonly MobilePointDbContext _context;
@@ -53,11 +56,12 @@ namespace MobilePoint.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Brand,Model,Specification,RegisterOn")] BrandModel brandModel)
+        public async Task<IActionResult> Create([Bind("Brand,Model,Specification")] BrandModel brandModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(brandModel);
+                brandModel.RegisterOn = DateTime.Now;
+                _context.BrandModels.Add(brandModel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -85,7 +89,7 @@ namespace MobilePoint.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Brand,Model,Specification,RegisterOn")] BrandModel brandModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Brand,Model,Specification")] BrandModel brandModel)
         {
             if (id != brandModel.Id)
             {
@@ -96,7 +100,8 @@ namespace MobilePoint.Controllers
             {
                 try
                 {
-                    _context.Update(brandModel);
+                    brandModel.RegisterOn = DateTime.Now;
+                    _context.BrandModels.Update(brandModel);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

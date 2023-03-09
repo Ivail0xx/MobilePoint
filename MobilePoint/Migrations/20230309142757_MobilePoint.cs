@@ -181,6 +181,7 @@ namespace MobilePoint.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     BrandModelId = table.Column<int>(type: "int", nullable: false),
                     Color = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageURL = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     RegisterOn = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },

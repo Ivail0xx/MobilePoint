@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,21 +12,34 @@ using MobilePoint.Data;
 
 namespace MobilePoint.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class OrdersController : Controller
     {
         private readonly MobilePointDbContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public OrdersController(MobilePointDbContext context)
+        public OrdersController(MobilePointDbContext context,UserManager<User> userManager)
         {
+            _userManager = userManager;
             _context = context;
         }
 
         // GET: Orders
         public async Task<IActionResult> Index()
         {
+            if (User.IsInRole("Admin"))
+            {          
             var mobilePointDbContext = _context.Orders.Include(o => o.Phones).Include(o => o.Users);
             return View(await mobilePointDbContext.ToListAsync());
+            }
+            else
+            {
+                var currentUser = _userManager.GetUserId(User);
+               var mobilePointDbContext = await _context.Orders.Include(o => o.Phones).Include(o => o.Users)
+                    .Where(x => x.UserId == currentUser.ToString()).ToListAsync();
+                return View(mobilePointDbContext);
+            }
+
         }
         
         // GET: Orders/Details/5
@@ -52,7 +66,8 @@ namespace MobilePoint.Controllers
         public IActionResult Create()
         {
             ViewData["PhoneId"] = new SelectList(_context.Phones, "Id", "Id");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+
+            //ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName");
             return View();
         }
 
@@ -61,16 +76,18 @@ namespace MobilePoint.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserId,PhoneId,Quantity,RegisterOn")] Order order)
+        public async Task<IActionResult> Create([Bind("PhoneId,Quantity")] Order order)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(order);
+                order.UserId = _userManager.GetUserId(User);
+                order.RegisterOn = DateTime.Now;
+                _context.Orders.Add(order);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["PhoneId"] = new SelectList(_context.Phones, "Id", "Id", order.PhoneId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", order.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", order.UserId);
             return View(order);
         }
 
@@ -97,7 +114,7 @@ namespace MobilePoint.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,PhoneId,Quantity,RegisterOn")] Order order)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,PhoneId,Quantity")] Order order)
         {
             if (id != order.Id)
             {
@@ -108,7 +125,9 @@ namespace MobilePoint.Controllers
             {
                 try
                 {
-                    _context.Update(order);
+                    order.UserId = _userManager.GetUserId(User);
+                    order.RegisterOn = DateTime.Now;
+                    _context.Orders.Update(order);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -125,7 +144,7 @@ namespace MobilePoint.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["PhoneId"] = new SelectList(_context.Phones, "Id", "Id", order.PhoneId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", order.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", order.UserId);
             return View(order);
         }
 
