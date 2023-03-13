@@ -43,7 +43,10 @@
     </dl>
 </div>
 <div>
+    <a asp-controller="Orders" asp-action="Create" class="btn btn-primary">Купи</a>
+    @if (User.IsInRole("Admin"))
+    {
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a>
-    <a asp-controller="Orders" asp-action="Create" class="btn btn-primary">Order</a>
+    }
     <a asp-action="Index">Back to List</a>
 </div>

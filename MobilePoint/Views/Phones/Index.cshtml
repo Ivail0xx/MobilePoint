@@ -4,12 +4,14 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Phones</h1>
-
-<p>
-    <a class="btn btn-primary" asp-action="Create">Create New</a>
-    <a class="btn btn-primary" asp-controller="BrandModels">Brand & Models</a>
-</p>
+<h1 style="color:#007bff"align="center">PHONES</h1>
+@if (User.IsInRole("Admin"))
+{
+    <div align="center">
+        <a class="btn btn-primary" asp-action="Create">Create New</a>
+        <a class="btn btn-primary" asp-controller="BrandModels">Brand & Models</a>
+  </div>
+}
 <div class="conteiner">
     <div class="row">
 @foreach (var item in Model)
