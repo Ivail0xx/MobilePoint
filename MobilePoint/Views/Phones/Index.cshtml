@@ -4,18 +4,23 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Phones</h1>
 
 <p>
     <a class="btn btn-primary" asp-action="Create">Create New</a>
+    <a class="btn btn-primary" asp-controller="BrandModels">Brand & Models</a>
 </p>
-
+<div class="conteiner">
+    <div class="row">
 @foreach (var item in Model)
 {
-  <div class="card" style="width: 18rem;">
-    <img class="card-img-top" src="@Html.DisplayFor(modelItem => item.ImageURL)" height="100%"alt="Card image cap">
+    <div class="col-sm-3">
+        <br>
+  <div class="card " style="width: 18rem;">
+    <img class="card-img-top" src="@Html.DisplayFor(modelItem => item.ImageURL)"  height="100%">
     <div class="card-body">
-            <h5 class="card-title">@Html.DisplayFor(modelItem => item.BrandModels.Brand) @Html.DisplayFor(modelItem => item.BrandModels.Model)</h5>           
+            <h5 class="card-title">@Html.DisplayFor(modelItem => item.BrandModels.Brand) @Html.DisplayFor(modelItem => item.BrandModels.Model)</h5>
+            <p class="card-text">Цвят: @Html.DisplayFor(modelItem => item.Color)</p>
             <p class="card-text">@Html.DisplayFor(modelItem => item.BrandModels.Specification)</p>
             <p class="card-subtitle">@Html.DisplayFor(modelItem => item.Price)лв</p>
         <a class="btn btn-primary"asp-controller="Orders" asp-action="Create" asp-route-id="@item.Id">Купи</a>
@@ -30,8 +35,11 @@
               <a asp-action="Details" asp-route-id="@item.Id">Details</a>
             }
         </div>
+        </div>
 </div>
 } 
+</div>
+</div>
 @*<table class="table">
     <thead>
         <tr>
