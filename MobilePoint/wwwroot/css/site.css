@@ -16,3 +16,10 @@ html {
 body {
   margin-bottom: 60px;
 }
+.welcome {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 100px;
+    margin-top: 80px;
+}
